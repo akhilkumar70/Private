@@ -3,37 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Encrypted Chat with AI</title>
+    <title>Private Encrypted Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        #chatLog::-webkit-scrollbar { width: 8px; }
-        #chatLog::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        #chatLog::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
-        #chatLog::-webkit-scrollbar-thumb:hover { background: #555; }
-        body { font-family: 'Inter', sans-serif; }
-        .ai-suggestions-container {
-            border: 1px solid #e2e8f0; /* Tailwind gray-200 */
-            border-radius: 0.375rem; /* rounded-md */
-            padding: 0.75rem; /* p-3 */
-            margin-top: 0.5rem; /* mt-2 */
-            background-color: #f9fafb; /* Tailwind gray-50 */
+        /* Custom scrollbar for chat log (optional) */
+        #chatLog::-webkit-scrollbar {
+            width: 8px;
         }
-        .ai-suggestion-item {
-            padding: 0.5rem; /* p-2 */
-            margin-bottom: 0.25rem; /* mb-1 */
-            border-radius: 0.25rem; /* rounded-sm */
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 0.875rem; /* text-sm */
+        #chatLog::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
         }
-        .ai-suggestion-item:hover {
-            background-color: #e5e7eb; /* Tailwind gray-200 */
+        #chatLog::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
         }
-        .loading-indicator {
-            font-style: italic;
-            color: #4b5563; /* Tailwind gray-600 */
-            margin-top: 0.5rem; /* mt-2 */
-            font-size: 0.875rem; /* text-sm */
+        #chatLog::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Ensure Inter font is prioritized */
+        body {
+            font-family: 'Inter', sans-serif;
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,33 +34,31 @@
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-2xl">
         <header class="mb-6 text-center">
-            <h1 class="text-3xl font-bold text-indigo-600">Private Encrypted Chat ✨ AI Enhanced</h1>
-            <p class="text-sm text-gray-600 mt-1">End-to-end encrypted messaging with AI-powered assistance.</p>
+            <h1 class="text-3xl font-bold text-indigo-600">Private Encrypted Chat</h1>
+            <p class="text-sm text-gray-600 mt-1">End-to-end encrypted messaging in your browser.</p>
         </header>
 
         <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg shadow">
             <h2 class="text-lg font-semibold text-blue-700 mb-2">How to Use:</h2>
             <ol class="list-decimal list-inside text-sm text-blue-600 space-y-1">
-                <li><strong>Agree on a Secret Key:</strong> Securely share a strong, unique password (the "Shared Secret Key") with your chat partner OUTSIDE of this application.</li>
+                <li><strong>Agree on a Secret Key:</strong> Securely share a strong, unique password (the "Shared Secret Key") with your chat partner OUTSIDE of this application (e.g., in person, over a secure call).</li>
                 <li><strong>Enter the Key:</strong> Both you and your partner must enter the exact same secret key into the "Shared Secret Key" field below.</li>
                 <li><strong>To Send a Message:</strong>
                     <ul class="list-disc list-inside ml-4">
                         <li>Type your message in "Your Message".</li>
-                        <li>Optionally, click "✨ Rephrase My Message" for AI suggestions.</li>
                         <li>Click "Encrypt & Prepare".</li>
                         <li>Copy the text from "Encrypted Message (Copy this...)".</li>
-                        <li>Send this copied text to your partner.</li>
+                        <li>Send this copied text to your partner (e.g., via email, another messenger).</li>
                     </ul>
                 </li>
                 <li><strong>To Read a Message:</strong>
                     <ul class="list-disc list-inside ml-4">
                         <li>Paste the encrypted text you received into "Paste Encrypted Message from Partner".</li>
                         <li>Click "Decrypt & View". The message will appear in the chat log.</li>
-                        <li>Optionally, click "✨ Suggest Reply to Partner" for AI-generated reply ideas based on their message.</li>
                     </ul>
                 </li>
             </ol>
-            <p class="text-xs text-red-500 mt-3 font-semibold">Important: If the secret key is lost or forgotten, messages cannot be decrypted. Refreshing the page requires re-entering the secret key.</p>
+            <p class="text-xs text-red-500 mt-3 font-semibold">Important: If the secret key is lost or forgotten, messages cannot be decrypted. If you refresh the page, you'll need to re-enter the secret key.</p>
         </div>
 
         <div class="mb-6 p-4 bg-white shadow rounded-lg">
@@ -84,26 +72,14 @@
             <div id="chatLog" class="h-80 overflow-y-auto border border-gray-300 rounded-md p-3 bg-gray-50 space-y-2">
                 <p class="text-sm text-gray-400 italic">Your decrypted messages will appear here...</p>
             </div>
-            <button id="suggestReplyButton" class="mt-3 w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out hidden">
-                ✨ Suggest Reply to Partner
-            </button>
-            <div id="suggestReplyLoading" class="loading-indicator hidden">Fetching reply suggestions...</div>
-            <div id="suggestReplyContainer" class="ai-suggestions-container hidden"></div>
         </div>
 
         <div class="mb-6 p-4 bg-white shadow rounded-lg">
             <label for="newMessage" class="block text-sm font-medium text-gray-700">Your Message:</label>
             <textarea id="newMessage" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 p-2" placeholder="Type your message here..."></textarea>
-            <div class="mt-3 space-y-2 sm:space-y-0 sm:flex sm:space-x-3">
-                <button id="encryptAndSendButton" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
-                    Encrypt & Prepare
-                </button>
-                <button id="rephraseMessageButton" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-150 ease-in-out">
-                    ✨ Rephrase My Message
-                </button>
-            </div>
-            <div id="rephraseMessageLoading" class="loading-indicator hidden">Fetching rephrasing suggestions...</div>
-            <div id="rephraseMessageContainer" class="ai-suggestions-container hidden"></div>
+            <button id="encryptAndSendButton" class="mt-3 w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                Encrypt & Prepare
+            </button>
         </div>
 
         <div class="mb-6 p-4 bg-white shadow rounded-lg">
@@ -125,7 +101,7 @@
         <div id="statusMessage" class="mt-6 p-3 rounded-md text-sm"></div>
 
         <footer class="mt-8 text-center text-xs text-gray-500">
-            <p>Client-side encryption using Web Crypto API. AI features use Gemini API. No unencrypted data is sent to any server by this page beyond what you explicitly send to the AI for processing.</p>
+            <p>Client-side encryption using Web Crypto API. No data is sent to any server by this page.</p>
             <p>Ensure you use a strong, unique Shared Secret Key and share it securely.</p>
         </footer>
     </div>
@@ -143,30 +119,21 @@
         const decryptAndReceiveButton = document.getElementById('decryptAndReceiveButton');
         const statusMessage = document.getElementById('statusMessage');
 
-        // AI Feature DOM Elements
-        const suggestReplyButton = document.getElementById('suggestReplyButton');
-        const suggestReplyLoading = document.getElementById('suggestReplyLoading');
-        const suggestReplyContainer = document.getElementById('suggestReplyContainer');
-
-        const rephraseMessageButton = document.getElementById('rephraseMessageButton');
-        const rephraseMessageLoading = document.getElementById('rephraseMessageLoading');
-        const rephraseMessageContainer = document.getElementById('rephraseMessageContainer');
-
         // Initial state
-        let cryptoKey = null; 
-        let lastPartnerMessageText = ""; // Store the last decrypted partner message
+        let cryptoKey = null; // Will store the derived crypto key
 
-        // --- Utility Functions (showStatus, addMessageToChatLog - mostly same as before) ---
+        // --- Utility Functions ---
         function showStatus(message, isError = false) {
             statusMessage.textContent = message;
             statusMessage.className = `mt-6 p-3 rounded-md text-sm ${isError ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`;
             setTimeout(() => {
                 statusMessage.textContent = '';
-                statusMessage.className = 'mt-6 p-3 rounded-md text-sm'; 
-            } , 5000); 
+                statusMessage.className = 'mt-6 p-3 rounded-md text-sm'; // Reset class
+            } , 5000); // Clear message after 5 seconds
         }
 
         function addMessageToChatLog(message, sender, isEncrypted = false) {
+            // Clear initial placeholder if it exists
             if (chatLog.childElementCount === 1 && chatLog.firstChild.tagName === 'P' && chatLog.firstChild.classList.contains('italic')) {
                 chatLog.innerHTML = '';
             }
@@ -187,11 +154,7 @@
             } else if (sender === 'Partner') {
                 messageElement.classList.add('bg-green-100', 'text-green-800', 'mr-auto');
                 senderSpan.textContent = 'Partner: ';
-                lastPartnerMessageText = message; // Store for "Suggest Reply"
-                suggestReplyButton.classList.remove('hidden'); // Show suggest reply button
-                suggestReplyContainer.classList.add('hidden'); // Hide any previous suggestions
-                suggestReplyContainer.innerHTML = '';
-            } else { 
+            } else { // System or error messages
                  messageElement.classList.add('bg-gray-200', 'text-gray-700', 'text-center', 'text-xs', 'italic');
                  messageElement.textContent = message;
                  chatLog.appendChild(messageElement);
@@ -200,7 +163,7 @@
             }
             
             messageElement.appendChild(senderSpan);
-            messageElement.append(document.createTextNode(message)); 
+            messageElement.append(document.createTextNode(message)); // Append actual message text
             messageElement.appendChild(timeSpan);
 
             if (isEncrypted) {
@@ -211,10 +174,12 @@
             }
             
             chatLog.appendChild(messageElement);
-            chatLog.scrollTop = chatLog.scrollHeight; 
+            chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the latest message
         }
 
-        // --- Cryptography Functions (deriveAndImportKey, encryptMessage, decryptMessage - same as before) ---
+        // --- Cryptography Functions ---
+
+        // Derive a key from the secret string using SHA-256, then import it for AES-GCM
         async function deriveAndImportKey(secretString) {
             if (!secretString) {
                 showStatus('Secret key cannot be empty.', true);
@@ -227,7 +192,7 @@
                     'raw',
                     keyMaterial,
                     { name: 'AES-GCM' },
-                    false, 
+                    false, // not extractable
                     ['encrypt', 'decrypt']
                 );
             } catch (error) {
@@ -255,6 +220,8 @@
             }
         });
 
+
+        // Encrypt a message
         async function encryptMessage(plaintext, key) {
             if (!key) {
                 showStatus('Secret key is not set. Please enter it first.', true);
@@ -264,13 +231,23 @@
                 showStatus('Cannot encrypt an empty message.', true);
                 return null;
             }
+
             try {
-                const iv = crypto.getRandomValues(new Uint8Array(12)); 
+                const iv = crypto.getRandomValues(new Uint8Array(12)); // 12 bytes IV for AES-GCM
                 const encodedMessage = new TextEncoder().encode(plaintext);
-                const ciphertextBuffer = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encodedMessage);
+                
+                const ciphertextBuffer = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encodedMessage
+                );
+
+                // Combine IV and ciphertext: IV (12 bytes) + ciphertext
                 const fullMessage = new Uint8Array(iv.length + ciphertextBuffer.byteLength);
                 fullMessage.set(iv);
                 fullMessage.set(new Uint8Array(ciphertextBuffer), iv.length);
+
+                // Convert to Base64 for easy transport
                 return btoa(String.fromCharCode.apply(null, fullMessage));
             } catch (error) {
                 console.error('Encryption error:', error);
@@ -280,6 +257,7 @@
             }
         }
 
+        // Decrypt a message
         async function decryptMessage(base64Ciphertext, key) {
             if (!key) {
                 showStatus('Secret key is not set. Please enter it first to decrypt.', true);
@@ -289,15 +267,28 @@
                 showStatus('Cannot decrypt an empty message.', true);
                 return null;
             }
+
             try {
+                // Convert Base64 back to Uint8Array
                 const fullMessage = Uint8Array.from(atob(base64Ciphertext), c => c.charCodeAt(0));
-                if (fullMessage.length < 13) { throw new Error("Ciphertext is too short to be valid."); }
+
+                if (fullMessage.length < 13) { // Must be at least 1 byte ciphertext + 12 bytes IV
+                    throw new Error("Ciphertext is too short to be valid.");
+                }
+
                 const iv = fullMessage.slice(0, 12);
                 const ciphertext = fullMessage.slice(12);
-                const decryptedBuffer = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ciphertext);
+                
+                const decryptedBuffer = await crypto.subtle.decrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    ciphertext
+                );
+
                 return new TextDecoder().decode(decryptedBuffer);
             } catch (error) {
                 console.error('Decryption error:', error);
+                // Common error: "The operation failed for an operation-specific reason" often means wrong key or corrupted data.
                 if (error.message.includes("operation-specific reason") || error.name === 'OperationError') {
                      showStatus('Decryption failed. This usually means the secret key is incorrect or the message is corrupted.', true);
                      addMessageToChatLog('Decryption failed: Incorrect key or corrupted message.', 'System');
@@ -309,188 +300,110 @@
             }
         }
 
-        // --- Gemini API Function ---
-        async function callGeminiAPI(promptText, loadingElement, containerElement, targetInputElement = null) {
-            loadingElement.classList.remove('hidden');
-            containerElement.classList.add('hidden');
-            containerElement.innerHTML = ''; // Clear previous suggestions
-
-            let chatHistory = [{ role: "user", parts: [{ text: promptText }] }];
-            const payload = { contents: chatHistory };
-            const apiKey = ""; // IMPORTANT: This will be managed by the Canvas environment.
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Gemini API Error:', errorData);
-                    throw new Error(`API request failed with status ${response.status}: ${errorData?.error?.message || 'Unknown error'}`);
-                }
-
-                const result = await response.json();
-                
-                loadingElement.classList.add('hidden');
-                containerElement.classList.remove('hidden');
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    // Assuming suggestions are separated by newlines or numbered
-                    const suggestions = text.split('\n').map(s => s.replace(/^\d+\.\s*/, '').trim()).filter(s => s.length > 0);
-                    
-                    if (suggestions.length > 0) {
-                        suggestions.forEach(suggestion => {
-                            const suggestionDiv = document.createElement('div');
-                            suggestionDiv.textContent = suggestion;
-                            suggestionDiv.classList.add('ai-suggestion-item');
-                            suggestionDiv.onclick = () => {
-                                if (targetInputElement) {
-                                    targetInputElement.value = suggestion;
-                                } else { // For suggest reply, copy to newMessageInput
-                                    newMessageInput.value = suggestion;
-                                }
-                                containerElement.classList.add('hidden'); // Hide after selection
-                            };
-                            containerElement.appendChild(suggestionDiv);
-                        });
-                    } else {
-                        containerElement.textContent = "No suggestions received from AI.";
-                    }
-                } else {
-                    console.error('Unexpected API response structure:', result);
-                    containerElement.textContent = "Could not parse AI suggestions.";
-                }
-            } catch (error) {
-                console.error('Error calling Gemini API:', error);
-                loadingElement.classList.add('hidden');
-                containerElement.classList.remove('hidden');
-                containerElement.textContent = `Error fetching suggestions: ${error.message}`;
-                showStatus(`AI Error: ${error.message}`, true);
-            }
-        }
-
-        // --- Event Listeners (Encrypt, Copy, Decrypt - mostly same as before) ---
+        // --- Event Listeners ---
         encryptAndSendButton.addEventListener('click', async () => {
             const plaintext = newMessageInput.value;
             if (!cryptoKey) {
                 showStatus('Please set the Shared Secret Key first!', true);
-                secretKeyInput.focus(); return;
+                secretKeyInput.focus();
+                return;
             }
             if (!plaintext.trim()) {
                 showStatus('Message cannot be empty.', true);
-                newMessageInput.focus(); return;
+                newMessageInput.focus();
+                return;
             }
+
             const encrypted = await encryptMessage(plaintext, cryptoKey);
             if (encrypted) {
                 encryptedMessageOutput.value = encrypted;
-                addMessageToChatLog(plaintext, 'You'); 
-                newMessageInput.value = ''; 
-                rephraseMessageContainer.classList.add('hidden'); // Hide rephrase suggestions
-                rephraseMessageContainer.innerHTML = '';
+                addMessageToChatLog(plaintext, 'You'); // Show original message in your log
+                newMessageInput.value = ''; // Clear input field
                 showStatus('Message encrypted and ready to copy.', false);
             }
         });
 
         copyEncryptedButton.addEventListener('click', () => {
             const textToCopy = encryptedMessageOutput.value;
-            if (!textToCopy) { showStatus('Nothing to copy.', true); return; }
+            if (!textToCopy) {
+                showStatus('Nothing to copy.', true);
+                return;
+            }
+
+            // Attempt to use document.execCommand as a fallback or primary for local files
             try {
-                encryptedMessageOutput.focus(); 
-                encryptedMessageOutput.select(); 
+                encryptedMessageOutput.focus(); // Element must be focused
+                encryptedMessageOutput.select(); // Text must be selected
                 const successful = document.execCommand('copy');
                 if (successful) {
                     showStatus('Encrypted message copied to clipboard!', false);
+                    // Deselect text after copying
                     window.getSelection().removeAllRanges(); 
-                    encryptedMessageOutput.blur(); 
+                    encryptedMessageOutput.blur(); // Remove focus
                     return;
                 }
+                // If document.execCommand returned false, it didn't copy.
+                // We'll fall through to navigator.clipboard if it's available.
             } catch (err) {
                 console.warn('document.execCommand("copy") failed, trying navigator.clipboard:', err);
+                // Fall through to navigator.clipboard
             }
+            
+            // Modern clipboard API (preferred, but can have restrictions)
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(textToCopy)
-                    .then(() => showStatus('Encrypted message copied to clipboard!', false))
+                    .then(() => {
+                        showStatus('Encrypted message copied to clipboard!', false);
+                    })
                     .catch(err => {
                         console.error('navigator.clipboard.writeText failed:', err);
+                        // Provide more specific feedback if possible
                         let userMessage = 'Failed to copy message. Please copy manually.';
-                        if (err.name === 'NotAllowedError') userMessage = 'Clipboard permission denied. Please enable it or copy manually.';
-                        else if (document.queryCommandSupported && !document.queryCommandSupported('copy')) userMessage = 'Copying not supported. Please copy manually.';
+                        if (err.name === 'NotAllowedError') {
+                            userMessage = 'Clipboard permission denied. Please enable it in your browser settings or copy manually.';
+                        } else if (document.queryCommandSupported && !document.queryCommandSupported('copy')) {
+                             userMessage = 'Copying to clipboard is not supported in this browser. Please copy manually.';
+                        }
                         showStatus(userMessage, true);
                     });
             } else {
-                showStatus('Clipboard API not available. Please copy manually.', true);
+                // Fallback if neither method works
+                showStatus('Clipboard API not available. Please copy the text manually.', true);
             }
         });
+
 
         decryptAndReceiveButton.addEventListener('click', async () => {
             const base64Ciphertext = incomingEncryptedMessageInput.value;
             if (!cryptoKey) {
                 showStatus('Please set the Shared Secret Key first!', true);
-                secretKeyInput.focus(); return;
+                secretKeyInput.focus();
+                return;
             }
             if (!base64Ciphertext.trim()) {
                 showStatus('Paste an encrypted message first.', true);
-                incomingEncryptedMessageInput.focus(); return;
+                incomingEncryptedMessageInput.focus();
+                return;
             }
+
             const decrypted = await decryptMessage(base64Ciphertext, cryptoKey);
             if (decrypted) {
                 addMessageToChatLog(decrypted, 'Partner');
-                incomingEncryptedMessageInput.value = ''; 
+                incomingEncryptedMessageInput.value = ''; // Clear input field
                 showStatus('Message decrypted and added to chat log.', false);
-            } else {
-                // Error already shown by decryptMessage, but ensure suggest reply button is hidden if decryption fails
-                suggestReplyButton.classList.add('hidden');
-                suggestReplyContainer.classList.add('hidden');
-                suggestReplyContainer.innerHTML = '';
             }
-        });
-
-        // --- AI Feature Event Listeners ---
-        suggestReplyButton.addEventListener('click', () => {
-            if (!lastPartnerMessageText) {
-                showStatus("No partner message to reply to.", true);
-                return;
-            }
-            if (!cryptoKey) { // Also check if cryptoKey is set, implies user is "logged in"
-                showStatus('Please set the Shared Secret Key first!', true);
-                return;
-            }
-            const prompt = `My chat partner sent this message: "${lastPartnerMessageText}". Suggest three concise and relevant replies I could send.`;
-            callGeminiAPI(prompt, suggestReplyLoading, suggestReplyContainer, newMessageInput);
-        });
-
-        rephraseMessageButton.addEventListener('click', () => {
-            const currentMessage = newMessageInput.value.trim();
-            if (!currentMessage) {
-                showStatus("There's no message to rephrase.", true);
-                return;
-            }
-             if (!cryptoKey) {
-                showStatus('Please set the Shared Secret Key first!', true);
-                return;
-            }
-            const prompt = `Rephrase the following message to improve its clarity and conciseness, or to offer slightly different tones. Provide three distinct options for: "${currentMessage}"`;
-            callGeminiAPI(prompt, rephraseMessageLoading, rephraseMessageContainer, newMessageInput);
         });
         
-        // Initial placeholder
+        // Initial placeholder if chat log is empty
         if (chatLog.childElementCount === 0 || (chatLog.childElementCount === 1 && chatLog.firstChild.tagName === 'P' && chatLog.firstChild.classList.contains('italic'))) {
-             chatLog.innerHTML = ''; 
+             chatLog.innerHTML = ''; // Clear if only placeholder exists
              const placeholder = document.createElement('p');
              placeholder.classList.add('text-sm', 'text-gray-400', 'italic', 'text-center', 'p-4');
              placeholder.textContent = 'Your decrypted messages will appear here...';
              chatLog.appendChild(placeholder);
         }
+
     </script>
 
 </body>
 </html>
-
-
